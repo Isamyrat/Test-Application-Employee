@@ -1,7 +1,5 @@
 package com.example.springbootbackend.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -20,11 +18,9 @@ public class Employee {
     private String lastName;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "employeesAddress", cascade = CascadeType.ALL)
-    @JsonManagedReference
     private List<Address> address;
 
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "employeeInformation", cascade = CascadeType.ALL)
-    @JsonManagedReference
     private PersonalInformation personalInformation;
 
     @ManyToMany(cascade = { CascadeType.ALL })
@@ -33,7 +29,6 @@ public class Employee {
             joinColumns = { @JoinColumn(name = "employee_id") },
             inverseJoinColumns = { @JoinColumn(name = "project_id") }
     )
-    @JsonManagedReference
     List<Project> projects = new ArrayList<>();
 
     public Employee() {

@@ -6,8 +6,12 @@ import com.example.springbootbackend.model.Project;
 import com.example.springbootbackend.repository.EmployeeRepository;
 import com.example.springbootbackend.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,14 +31,15 @@ public class EmployeeService {
     @Autowired
     private PersonalInformationService personalInformationService;
 
-    public List<Employee> getAll(){
+   /* public List<Employee> getAll(){
         return employeeRepository.findAll();
-    }
+    }*/
+   public Page<Employee> getAll(Pageable pageable){
+       return employeeRepository.findAll(pageable);
+   }
 
-    public List<Employee> addEmployee(String firstName, String lastName) {
-        Employee employees = new Employee(firstName,lastName);
-        employeeRepository.save(employees);
-        return employeeRepository.findAll();
+    public Employee addEmployee( Employee employee) {
+        return employeeRepository.save(employee);
     }
 
     public Employee addEmployeeProject(Long idEmployee, Long idProject) {
@@ -59,13 +64,13 @@ public class EmployeeService {
     }
 
 
-    public Employee updateEmployee(Long id, String firstName, String lastName ){
+    public Employee updateEmployee(Long id, Employee employeeDetails ){
         Employee employee  = employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not exist with id:" + id));
 
 
-        employee.setFirstName(firstName);
-        employee.setLastName(lastName);
+        employee.setFirstName(employeeDetails.getFirstName());
+        employee.setLastName(employeeDetails.getLastName());
 
         Employee updateEmployee = employeeRepository.save(employee);
         return updateEmployee;
